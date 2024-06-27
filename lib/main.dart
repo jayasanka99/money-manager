@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:money_app/screens/onboarding_screen.dart';
+import 'package:money_app/screens/user_service.dart';
+import 'package:money_app/screens/wrapper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SharedPreferences.getInstance();
   runApp(const MyApp());
 }
 
@@ -10,15 +15,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "Money App",
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        fontFamily: "Inter",
-      ),
-      home: const Scaffold(
-        body: OnboardingScreen(),
-      ),
+    return FutureBuilder(
+      future: UserServices.checkUserEmail(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        } else {
+          bool hasEmail = snapshot.data ?? false;
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            home: Wrapper(isLogin: hasEmail),
+          );
+        }
+      },
     );
   }
 }

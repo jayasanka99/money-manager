@@ -23,7 +23,7 @@ class CustomBtn extends StatelessWidget {
       child: Center(
           child: Text(
         btnText,
-        style: const TextStyle(color: Colors.white),
+        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500,fontSize: 20),
       )),
     );
   }
